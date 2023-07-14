@@ -440,7 +440,7 @@
   "subscription-game-ratings.html"
   {:catalogs (->> game-catalog-ratings
                   (concat classics-catalog-ratings)
-                  (take 31)
+                  #_(take 31)
                   (sort-by #(get (:igdb %) "total_rating")
                            #(> (or %1 Integer/MIN_VALUE) (or %2 Integer/MIN_VALUE))))
    :name "Title"
