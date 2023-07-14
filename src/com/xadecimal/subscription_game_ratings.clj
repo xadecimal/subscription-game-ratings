@@ -440,7 +440,7 @@
   "subscription-game-ratings.html"
   {:catalogs (->> game-catalog-ratings
                   (concat classics-catalog-ratings)
-                  #_(take 31)
+                  (take 31)
                   (sort-by #(get (:igdb %) "total_rating")
                            #(> (or %1 Integer/MIN_VALUE) (or %2 Integer/MIN_VALUE))))
    :name "Title"
@@ -452,7 +452,9 @@
    :last-updated (-> (DateTimeFormatter/ofPattern "yyyy/MM/dd z" Locale/US)
                      (.withZone (ZoneId/of "UTC"))
                      (.format (Instant/now)))})
- (spit "./resources/public/index.html"))
+ (#(let [output "./resources/public/index.html"]
+     (io/make-parents output)
+     (spit output %))))
 
 (System/exit 0)
 

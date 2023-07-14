@@ -2,9 +2,7 @@
 name: Generate and Deploy to GitHub Pages
 
 on:
-  # Runs on pushes targeting the default branch
-  push:
-    branches: ["main"]
+  # Runs at 15:40 every Monday
   schedule:
     - cron: '40 15 * * 1'
 
