@@ -1,0 +1,33 @@
+<table>
+    <tr>
+        <th>{{name}}</th>
+        <th>{{igdb.name}}</th>
+        <th>{{igdb.total-rating}}</th>
+        <th>{{igdb.rating}}</th>
+        <th>{{push.score}}</th>
+        <th>{{push.user-score}}</th>
+    </tr>
+    {% for game in catalog.games %}
+    <tr>
+        <td>
+            <span class="img-zoom">
+                {% ifendswith {{game.push.img}} "cover_large.jpg" %}
+                <img src="{{game.igdb.cover.img}}" alt="Cover of {{game.title}}">
+                {% else %}
+                <img src="{{game.push.img}}" alt="Cover of {{game.title}}">
+                {% endifendswith %}
+                <a href='{{game.push.url}}'>{{game.title}}</a>
+                {% for platform in game.platforms %}
+                <sup>{{platform}}</sup>
+                {% endfor %}
+                <sup>{% if game.subscription %}{{game.subscription|name}}{% endif %}</sup>
+            </span>
+        </td>
+        <td><a href='{{game.igdb.url}}'>{{game.igdb.name}}</a></td>
+        <td>{% if game.igdb.total_rating %}{{game.igdb.total_rating|double-format:2}}{% endif %}</td>
+        <td>{% if game.igdb.rating %}{{game.igdb.rating|double-format:2}}{% endif %}</td>
+        <td>{{game.push.score}}</td>
+        <td>{{game.push.user-score}}</td>
+    </tr>
+    {% endfor %}
+</table>

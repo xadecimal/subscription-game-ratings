@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+         .img-zoom img {
+             height: 50px;
+             transition: 0.2s all ease-in-out;
+         }
+
+         .img-zoom img:hover {
+             transform: translateX(100px) scale(6);
+         }
+        </style>
+    </head>
+    <body>
+
+        <h1>Subscription Game Ratings</h1>
+        <p>
+            This page lists all current PS+ games that are part of the game catalog (extra and premium) and
+            classics catalog (premium only) sorted by IGDB rating.
+        </p>
+        <p>
+            It gets the current list of PS+ games from <a href=\"https://www.pushsquare.com/guides/all-ps-plus-games#all-ps-plus-extra-games-list\">Push Square</a>
+            and for each one retrieves the IGDB total rating (critics + users) and user rating.
+        </p>
+        <p>
+            The list is ranked by IGDB total rating, but also shows the Push Square score and user score along with the IGDB user rating.
+        </p>
+        <p>
+            Game Pass console and PC games will also be added eventually.
+        </p>
+        <p>
+            Last Updated On: {{last-updated}}
+        </p>
+
+        {% with catalog.games=catalogs %}
+        {% include "catalog.html" %}
+        {% endwith %}
+
+    </body>
+</html>
