@@ -2,40 +2,131 @@
 <html>
     <head>
         <style>
+         .img-txt {
+             display: inline-flex;
+             align-items: center;
+             flex-direction: row;
+         }
+
          .img-zoom img {
-             height: 50px;
+             height: 100px;
              transition: 0.2s all ease-in-out;
+             padding-right: 10px;
          }
 
          .img-zoom img:hover {
-             transform: translateX(100px) scale(6);
+             transform: translateX(200px) scale(6);
          }
+
+         .on-top-another {
+             display: inline-flex;
+             flex-direction: column;
+         }
+
+         .on-top-another a {
+             padding-bottom: 5px;
+         }
+
+         body {
+             font-family: "Arial", sans-serif;
+             background-color: #1a1a1a; /* Dark background color */
+             color: #ffffff; /* Text color */
+             margin: 0;
+             padding: 0;
+         }
+
+         /* Header Styles */
+         header {
+             background-color: #1e2a37; /* Darker blue */
+             padding: 20px;
+             text-align: center;
+             font-size: 24px;
+         }
+
+         /* Page Container Styles */
+         .container {
+             padding: 20px;
+         }
+
+         /* Table Styles */
+         table {
+             border-collapse: collapse;
+             width: 100%;
+             background-color: #283b4c; /* Slightly darker blue */
+         }
+
+         th, td {
+             padding: 12px;
+             text-align: left;
+             border-bottom: 1px solid #A1A1A1;
+         }
+
+         th {
+             background-color: #0E6E5C;
+             font-size: 18px;
+         }
+
+         tr:nth-child(even) {
+             background-color: #1e2a37;
+         }
+
+         tr:hover {
+             background-color: #3a536c;
+         }
+
+         /* Link Styles */
+         a {
+             color: #20E8C1;
+             text-decoration: none;
+             transition: color 0.3s ease;
+         }
+
+         a:visited {
+             color: #20E8C1;
+         }
+
+         a:hover {
+             color: #1abc9c;
+         }
+
+         /* Responsive Styles */
+         @media only screen and (max-width: 600px) {
+             .container {
+                 max-width: 100%;
+             }
+         }
+
         </style>
     </head>
     <body>
 
-        <h1>Subscription Game Ratings</h1>
-        <p>
-            This page lists all current PS+ games that are part of the game catalog (extra and premium) and
-            classics catalog (premium only) sorted by IGDB rating.
-        </p>
-        <p>
-            It gets the current list of PS+ games from <a href=\"https://www.pushsquare.com/guides/all-ps-plus-games#all-ps-plus-extra-games-list\">Push Square</a>
-            and for each one retrieves the IGDB total rating (critics + users) and user rating.
-        </p>
-        <p>
-            The list is ranked by IGDB total rating, but also shows the Push Square score and user score along with the IGDB user rating.
-        </p>
-        <p>
-            Game Pass console and PC games will also be added eventually.
-        </p>
-        <p>
-            Last Updated On: {{last-updated}}
-        </p>
+        <header>
+            <h1>Subscription Game Ratings</h1>
+        </header>
 
-        {% with catalog.games=catalogs %}
-        {% include "catalog.html" %}
-        {% endwith %}
+        <div class="container">
+            <p>
+                This page lists all current PS+ games that are part of the game catalog (extra and premium) and
+                classics catalog (premium only) sorted by IGDB rating.
+            </p>
+            <p>
+                It gets the current list of PS+ games from <a href=\"https://www.pushsquare.com/guides/all-ps-plus-games#all-ps-plus-extra-games-list\">Push Square</a>
+                and for each one retrieves the IGDB total rating (critics + users) and user rating.
+            </p>
+            <p>
+                The list is ranked by IGDB total rating, but also shows the Push Square score and user score along with the IGDB user rating.
+            </p>
+            <p>
+                Game Pass console and PC games will also be added eventually.
+            </p>
+            <p>
+                Last Updated On: {{last-updated}}
+            </p>
 
+            {% with catalog.games=catalogs %}
+            {% include "catalog.html" %}
+            {% endwith %}
+
+        </div>
     </body>
 </html>
