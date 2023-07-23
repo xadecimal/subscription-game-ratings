@@ -224,7 +224,11 @@
 
 (def igdb-client-id "vtflt38ztq8znizdm96gixdu4uccze")
 
-(def igdb-client-secret "gksuczvwva2fol79vfyuay7r0tr00s")
+(def igdb-client-secret (or (System/getenv "IGDB_CLIENT_SECRET")
+                            (throw
+                             (ex-info
+                              "Environment var IGDB_CLIENT_SECRET must be set."
+                              {}))))
 
 (def igdb-games-api "https://api.igdb.com/v4/games")
 
