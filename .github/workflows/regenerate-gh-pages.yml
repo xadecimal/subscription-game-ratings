@@ -50,6 +50,7 @@ jobs:
           restore-keys: cljdeps-
       - name: Generate static site
         run: clojure -M ./src/com/xadecimal/subscription_game_ratings.clj
+        env: IGDB_CLIENT_SECRET: ${{ secrets.IGDB_CLIENT_SECRET }}
       - name: Upload Clojure error logs
         if: failure()
         uses: actions/upload-artifact@v3
