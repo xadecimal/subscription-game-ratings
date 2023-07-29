@@ -14,5 +14,6 @@ pom.xml.asc
 .cpcache/
 .clj-kondo/
 .lsp/
-/resources/public/
+/resources/public/*
+!/resources/public/cljs
 .env
