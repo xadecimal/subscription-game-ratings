@@ -1,14 +1,17 @@
 <form class="table-functions">
     <div class="table-filter">
-        Show only:
+        Subscriptions:
         {% for sub in subs %}
-        <input type="checkbox" id="{{sub}}" name="{{sub}}" value="{{sub}}" checked
-               onchange="do_filter(this)">
+        <input type="checkbox" id="{{sub}}" name="subs" value="{{sub}}" checked
+               onchange="do_filter()">
         <label for="{{sub}}">{{sub|capitalize}}</label>
         {% endfor %}
+    </div>
+    <div class="table-filter">
+        Platforms:
         {% for platform in platforms %}
-        <input type="checkbox" id="{{platform}}" name="{{platform}}" value="{{platform}}" checked
-               onchange="do_filter(this)">
+        <input type="checkbox" id="{{platform}}" name="platforms" value="{{platform}}" checked
+               onchange="do_filter()">
         <label for="{{platform}}">{{platform|upper}}</label>
         {% endfor %}
     </div>
@@ -22,7 +25,7 @@
         </select>
         <label for="sort-order">Order:</label>
         <select name="order" id="order" onchange="do_sort()">
-            <option value="dsc">Best to worse</option>
+            <option value="dsc">Best to worst</option>
             <option value="asc">Worst to best</option>
         </select>
     </div>

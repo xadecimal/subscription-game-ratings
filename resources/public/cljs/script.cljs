@@ -1,18 +1,39 @@
 (ns script)
 
+(defn get-checked
+  [checkbox-name]
+  (->> (str "input[name=\"" checkbox-name "\"]:checked")
+       (.querySelectorAll js/document)
+       (map #(.-value %))))
+
+(defn contains-one-of-class?
+  [el classes]
+  (boolean (some #(-> el .-classList (.contains %)) classes)))
+
 (defn set-display
-  [class display]
-  (.forEach
-   (.querySelectorAll js/document (str "." class))
-   (fn[e] (set! (-> e .-style .-display) (name display)))))
+  [el display]
+  (set! (-> el .-style .-display) (name display)))
 
 (defn do-filter
-  [e]
-  (let [value (.-value e)
-        checked (.-checked e)]
-    (if checked
-      (set-display value :table-row)
-      (set-display value :none))))
+  []
+  (let [table (-> js/document (.getElementById "table-catalog"))
+        rows (-> table (.querySelectorAll ":scope > tbody > tr"))
+        checked-subs (get-checked "subs")
+        checked-platforms (get-checked "platforms")]
+    (.forEach rows
+              (fn[row]
+                (if (and (contains-one-of-class? row checked-subs)
+                         (contains-one-of-class? row checked-platforms))
+                  (set-display row :table-row)
+                  (set-display row :none))))))
+
+(defn get-text-content
+  [row column-idx]
+  (-> (aget (.-cells row) column-idx) .-textContent))
+
+(defn parse-float
+  [str]
+  (if (= "" str) 0 (js/parseFloat str)))
 
 (defn sort-table-by-column
   [table-id column-idx ascending]
@@ -20,10 +41,10 @@
         rows (-> js/Array (.from (-> table (.querySelectorAll ":scope > tbody > tr"))))]
     (-> rows (.sort
               (fn[row1 row2]
-                (let [row1Value (-> (aget (.-cells row1) column-idx) .-textContent)
-                      row2Value (-> (aget (.-cells row2) column-idx) .-textContent)
-                      row1Num (if (= "" row1Value) 0 (js/parseFloat row1Value))
-                      row2Num (if (= "" row2Value) 0 (js/parseFloat row2Value))]
+                (let [row1Value (get-text-content row1 column-idx)
+                      row2Value (get-text-content row2 column-idx)
+                      row1Num (parse-float row1Value)
+                      row2Num (parse-float row2Value)]
                   (if ascending (- row1Num row2Num) (- row2Num row1Num))))))
     (.forEach rows
               (fn[row]
