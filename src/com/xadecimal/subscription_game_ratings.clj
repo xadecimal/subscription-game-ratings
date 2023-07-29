@@ -453,6 +453,11 @@
           :rating "IGDB User Rating"}
    :push {:score "Push Score"
           :user-score "Push User Score"}
+   :platforms (->> igdb-platform-map
+                   keys
+                   (map name)
+                   (sort))
+   :subs ["extra" "premium"]
    :last-updated (-> (DateTimeFormatter/ofPattern "yyyy/MM/dd z" Locale/US)
                      (.withZone (ZoneId/of "UTC"))
                      (.format (Instant/now)))})

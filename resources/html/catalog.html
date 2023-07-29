@@ -1,39 +1,73 @@
-<table>
-    <tr>
-        <th>{{name}}</th>
-        <th>{{igdb.name}}</th>
-        <th>{{igdb.total-rating}}</th>
-        <th>{{igdb.rating}}</th>
-        <th>{{push.score}}</th>
-        <th>{{push.user-score}}</th>
-    </tr>
-    {% for game in catalog.games %}
-    <tr>
-        <td>
-            <div class="img-txt">
-                <div class="img-zoom">
-                    {% ifendswith {{game.push.img}} "cover_large.jpg" %}
-                    <img src="{{game.igdb.cover.img}}" alt="Cover of {{game.title}}">
-                    {% else %}
-                    <img src="{{game.push.img}}" alt="Cover of {{game.title}}">
-                    {% endifendswith %}
+<form class="table-functions">
+    <div class="table-filter">
+        Show only:
+        {% for sub in subs %}
+        <input type="checkbox" id="{{sub}}" name="{{sub}}" value="{{sub}}" checked
+               onchange="do_filter(this)">
+        <label for="{{sub}}">{{sub|capitalize}}</label>
+        {% endfor %}
+        {% for platform in platforms %}
+        <input type="checkbox" id="{{platform}}" name="{{platform}}" value="{{platform}}" checked
+               onchange="do_filter(this)">
+        <label for="{{platform}}">{{platform|upper}}</label>
+        {% endfor %}
+    </div>
+    <div class="table-sort">
+        <label for="sort">Sort by:</label>
+        <select name="sort" id="sort" onchange="do_sort()">
+            <option value="2">{{igdb.total-rating}}</option>
+            <option value="3">{{igdb.rating}}</option>
+            <option value="4">{{push.score}}</option>
+            <option value="5">{{push.user-score}}</option>
+        </select>
+        <label for="sort-order">Order:</label>
+        <select name="order" id="order" onchange="do_sort()">
+            <option value="dsc">Best to worse</option>
+            <option value="asc">Worst to best</option>
+        </select>
+    </div>
+</form>
+
+<table id="table-catalog">
+    <thead>
+        <tr>
+            <th>{{name}}</th>
+            <th>{{igdb.name}}</th>
+            <th>{{igdb.total-rating}}</th>
+            <th>{{igdb.rating}}</th>
+            <th>{{push.score}}</th>
+            <th>{{push.user-score}}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for game in catalog.games %}
+        <tr class="{% for platform in game.platforms %}{{platform|lower}}{% endfor %} {% if game.subscription %}{{game.subscription|name}}{% endif %}">
+            <td>
+                <div class="img-txt">
+                    <div class="img-zoom">
+                        {% ifendswith {{game.push.img}} "cover_large.jpg" %}
+                        <img src="{{game.igdb.cover.img}}" alt="Cover of {{game.title}}">
+                        {% else %}
+                        <img src="{{game.push.img}}" alt="Cover of {{game.title}}">
+                        {% endifendswith %}
+                    </div>
+                    <div class="on-top-another">
+                        <a href='{{game.push.url}}'>{{game.title}}</a>
+                        <span>
+                            {% for platform in game.platforms %}
+                            <sup>{{platform}}</sup>
+                            {% endfor %}
+                            <sup>{% if game.subscription %}{{game.subscription|name}}{% endif %}</sup>
+                        </span>
+                    </div>
                 </div>
-                <div class="on-top-another">
-                    <a href='{{game.push.url}}'>{{game.title}}</a>
-                    <span>
-                        {% for platform in game.platforms %}
-                        <sup>{{platform}}</sup>
-                        {% endfor %}
-                        <sup>{% if game.subscription %}{{game.subscription|name}}{% endif %}</sup>
-                    </span>
-                </div>
-            </div>
-        </td>
-        <td><a href='{{game.igdb.url}}'>{{game.igdb.name}}</a></td>
-        <td>{% if game.igdb.total_rating %}{{game.igdb.total_rating|double-format:2}}{% endif %}</td>
-        <td>{% if game.igdb.rating %}{{game.igdb.rating|double-format:2}}{% endif %}</td>
-        <td>{{game.push.score}}</td>
-        <td>{{game.push.user-score}}</td>
-    </tr>
-    {% endfor %}
+            </td>
+            <td><a href='{{game.igdb.url}}'>{{game.igdb.name}}</a></td>
+            <td>{% if game.igdb.total_rating %}{{game.igdb.total_rating|double-format:2}}{% endif %}</td>
+            <td>{% if game.igdb.rating %}{{game.igdb.rating|double-format:2}}{% endif %}</td>
+            <td>{{game.push.score}}</td>
+            <td>{{game.push.user-score}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
 </table>

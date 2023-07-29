@@ -49,6 +49,28 @@
          }
 
          /* Table Styles */
+         .table-functions {
+             margin-bottom: 5px;
+         }
+
+         /* To ensure the container wraps around the floated divs and takes
+            their height into account, we use clearfix technique */
+         .table-functions::after {
+             content: "";
+             display: table;
+             clear: both;
+         }
+
+         .table-filter {
+             float: right;
+             clear: right;
+         }
+
+         .table-sort {
+             float: right;
+             clear: right;
+         }
+
          table {
              border-collapse: collapse;
              width: 100%;
@@ -97,6 +119,11 @@
          }
 
         </style>
+
+        <script src="https://cdn.jsdelivr.net/npm/scittle@0.6.15/dist/scittle.js"
+                type="application/javascript">
+        </script>
+        <script src="cljs/script.cljs" type="application/x-scittle"></script>
     </head>
     <body>
 
@@ -120,6 +147,7 @@
                 Game Pass console and PC games will also be added eventually.
             </p>
             <p>
+                Page Updates Weekly<br>
                 Last Updated On: {{last-updated}}
             </p>
 
