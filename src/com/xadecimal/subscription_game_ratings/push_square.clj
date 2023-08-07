@@ -45,6 +45,18 @@
           (.toInstant)
           (Date/from)))
 
+(defn push-platform->platform-kw
+  [platform]
+  (case platform
+    "ps1" :ps1
+    "ps2" :ps2
+    "ps3" :ps3
+    "ps4" :ps4
+    "ps5" :ps5
+    #_#_"psvr" :psvr
+    #_#_"psvr2" :psvr2
+    "psp" :psp))
+
 (defn get-push-game-details
   [url]
   (let [html (u/slurp-memo url)
@@ -158,18 +170,6 @@
      :platforms platforms}))
 
 #_(get-ps-store-game-details "https://store.playstation.com/en-us/product/UP0006-CUSA24010_00-NHL94RPRESTANDED")
-
-(defn push-platform->platform-kw
-  [platform]
-  (case platform
-    "ps1" :ps1
-    "ps2" :ps2
-    "ps3" :ps3
-    "ps4" :ps4
-    "ps5" :ps5
-    #_#_"psvr" :psvr
-    #_#_"psvr2" :psvr2
-    "psp" :psp))
 
 (defn make-push-game-map
   [push-hickory-game-li subscription]

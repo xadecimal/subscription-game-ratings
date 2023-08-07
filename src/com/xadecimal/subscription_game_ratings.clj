@@ -3,6 +3,8 @@
    [clojure.java.io :as io]
    [com.xadecimal.subscription-game-ratings.igdb :as igdb]
    [com.xadecimal.subscription-game-ratings.model :as m]
+   [com.xadecimal.subscription-game-ratings.push-square]
+   [com.xadecimal.subscription-game-ratings.true-achievements]
    [com.xadecimal.subscription-game-ratings.utils :as u]
    [selmer.parser :as html])
   (:import
