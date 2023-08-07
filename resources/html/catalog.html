@@ -10,9 +10,9 @@
     <div class="table-filter">
         Platforms:
         {% for platform in platforms %}
-        <input type="checkbox" id="{{platform}}" name="platforms" value="{{platform}}" checked
+        <input type="checkbox" id="{{platform|name}}" name="platforms" value="{{platform|name}}" checked
                onchange="do_filter()">
-        <label for="{{platform}}">{{platform|upper}}</label>
+        <label for="{{platform|name}}">{{platform|name|upper}}</label>
         {% endfor %}
     </div>
     <div class="table-sort">
@@ -44,23 +44,23 @@
     </thead>
     <tbody>
         {% for game in catalog.games %}
-        <tr class="{% for platform in game.platforms %}{{platform|lower}}{% endfor %} {% if game.subscription %}{{game.subscription|name}}{% endif %}">
+        <tr class="{% for platform in game.platforms %}{{platform|name|lower}} {% endfor %} {% for subscription in game.subscriptions %}{% if subscription %}{{subscription|name}} {% endif %}{% endfor %}">
             <td>
                 <div class="img-txt">
                     <div class="img-zoom">
-                        {% ifendswith {{game.push.img}} "cover_large.jpg" %}
-                        <img src="{{game.igdb.cover.img}}" alt="Cover of {{game.title}}">
-                        {% else %}
-                        <img src="{{game.push.img}}" alt="Cover of {{game.title}}">
-                        {% endifendswith %}
+                        <img src="{{game.img}}" alt="Cover of {{game.title}}">
                     </div>
                     <div class="on-top-another">
-                        <a href='{{game.push.url}}'>{{game.title}}</a>
+                        <a href='{{game.url}}'>{{game.title}}</a>
                         <span>
                             {% for platform in game.platforms %}
-                            <sup>{{platform}}</sup>
+                            <sup>{{platform|name}}</sup>
                             {% endfor %}
-                            <sup>{% if game.subscription %}{{game.subscription|name}}{% endif %}</sup>
+                        </span>
+                        <span>
+                            {% for subscription in game.subscriptions %}
+                            <sup>{% if subscription %}{{subscription|name}}{% endif %}</sup>
+                            {% endfor %}
                         </span>
                     </div>
                 </div>
@@ -68,8 +68,8 @@
             <td><a href='{{game.igdb.url}}'>{{game.igdb.name}}</a></td>
             <td>{% if game.igdb.total_rating %}{{game.igdb.total_rating|double-format:2}}{% endif %}</td>
             <td>{% if game.igdb.rating %}{{game.igdb.rating|double-format:2}}{% endif %}</td>
-            <td>{{game.push.score}}</td>
-            <td>{{game.push.user-score}}</td>
+            <td>{% if game.score %}{{game.score|double-format:2}}{% endif %}</td>
+            <td>{% if game.user-score %}{{game.user-score|double-format:2}}{% endif %}</td>
         </tr>
         {% endfor %}
     </tbody>
