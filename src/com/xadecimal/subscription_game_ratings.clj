@@ -63,7 +63,7 @@
      (io/make-parents output)
      (spit output %))))
 
-#_(System/exit 0)
+(System/exit 0)
 
 ;;;; Generate HTML
 ;;;;;;;;;;;;;;;;;;;;;;
