@@ -1,6 +1,7 @@
 (ns com.xadecimal.subscription-game-ratings.true-achievements 
   (:require
    [clojure.string :as str]
+   [clojure.stacktrace :as stacktrace]
    [com.xadecimal.subscription-game-ratings.igdb :as igdb]
    [com.xadecimal.subscription-game-ratings.model :as m]
    [com.xadecimal.subscription-game-ratings.utils :as u]
@@ -51,11 +52,16 @@
 
 (defn parse-true-date
   [date]
-  (some-> date
-          (LocalDate/parse (DateTimeFormatter/ofPattern "dd MMMM yyyy" Locale/US))
-          (.atStartOfDay (ZoneId/of "UTC"))
-          (.toInstant)
-          (Date/from)))
+  (try
+    (some-> date
+            (LocalDate/parse (DateTimeFormatter/ofPattern "dd MMMM yyyy" Locale/US))
+            (.atStartOfDay (ZoneId/of "UTC"))
+            (.toInstant)
+            (Date/from))
+    (catch Exception ex
+      (println
+       (str "Could not parse " date " due to: " (stacktrace/root-cause ex)))
+      nil)))
 
 (defn true-sub->subscription-kw
   [sub]
