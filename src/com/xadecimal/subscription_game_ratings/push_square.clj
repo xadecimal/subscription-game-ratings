@@ -70,6 +70,16 @@
                               (z/node)
                               (str/trim)
                               (parse-push-date))
+        added-date (some->> hickory
+                            (hs/select-locs (hs/find-in-text #"PlayStation Plus.*(Extra|Premium)"))
+                            (first)
+                            (z/right)
+                            (z/right)
+                            (z/down)
+                            (z/down)
+                            (z/node)
+                            (str/trim)
+                            (parse-push-date))
         user-score (some->> hickory
                             (hs/select (hs/and (hs/tag "span")
                                                (hs/class "score")))
@@ -122,11 +132,14 @@
                             (map push-platform->platform-kw)
                             (set)))]
     {:release-date release-date
+     :added-date added-date
      :user-score user-score
      :score push-score
      :img img
      :url url
      :platforms platforms}))
+
+#_(get-push-game-details "https://www.pushsquare.com/games/ps5/returnal")
 
 (defn get-ps-store-game-details
   [url]
@@ -183,6 +196,7 @@
                        (filter #{"ps1" "ps2" "ps3" "ps4" "ps5" "psp"})
                        (map push-platform->platform-kw))
         release-date (:release-date push-game-details)
+        added-date (:added-date push-game-details)
         igdb (igdb/find-igdb-game title release-date platforms)
         push-img (:img push-game-details)
         igdb-img (-> igdb (get "cover") (get "img"))]
@@ -191,6 +205,7 @@
       :platforms platforms
       :subscription subscription
       :release-date release-date
+      :added-date added-date
       :user-score (:user-score push-game-details)
       :score (:score push-game-details)
       :img (if (or
@@ -220,6 +235,7 @@
                 (-> title (:content) (first))
                 title)
         release-date (:release-date push-game-details)
+        added-date (:added-date push-game-details)
         platforms (:platforms push-game-details)
         igdb (igdb/find-igdb-game title release-date platforms)
         push-img (:img push-game-details)
@@ -229,6 +245,7 @@
       :platforms platforms
       :subscription subscription
       :release-date release-date
+      :added-date added-date
       :user-score (:user-score push-game-details)
       :score (:score push-game-details)
       :img (if (or
@@ -259,7 +276,7 @@
                  (hs/class "games-style-list"))))
        (first)
        (:content)
-       #_(take 31)
+       #_(take 1)
        (map #(make-push-game-map % subscription))))
 
 (defn scrape-push-ea-catalog
@@ -272,7 +289,7 @@
        (first)
        (hs/select
         (hs/tag "li"))
-       #_(take 31)
+       #_(take 1)
        (map #(make-push-ea-game-map % subscription))))
 
 (defmethod m/scrape-catalog :extra

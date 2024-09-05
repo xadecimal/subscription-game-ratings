@@ -51,6 +51,8 @@
           :rating "IGDB User Rating"}
    :push {:score "Push Score"
           :user-score "Push/True User Score"}
+   :release-date "Released"
+   :added-date "Added"
    :platforms (->> igdb/igdb-platform-map
                    keys
                    (map name)

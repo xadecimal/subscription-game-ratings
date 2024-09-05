@@ -22,6 +22,8 @@
             <option value="3">{{igdb.rating}}</option>
             <option value="4">{{push.score}}</option>
             <option value="5">{{push.user-score}}</option>
+            <option value="6">{{release-date}}</option>
+            <option value="7">{{added-date}}</option>
         </select>
         <label for="sort-order">Order:</label>
         <select name="order" id="order" onchange="do_sort()">
@@ -40,6 +42,8 @@
             <th>{{igdb.rating}}</th>
             <th>{{push.score}}</th>
             <th>{{push.user-score}}</th>
+            <th>{{release-date}}</th>
+            <th>{{added-date}}</th>
         </tr>
     </thead>
     <tbody>
@@ -66,10 +70,12 @@
                 </div>
             </td>
             <td><a href='{{game.igdb.url}}'>{{game.igdb.name}}</a></td>
-            <td>{% if game.igdb.total_rating %}{{game.igdb.total_rating|double-format:2}}{% endif %}</td>
-            <td>{% if game.igdb.rating %}{{game.igdb.rating|double-format:2}}{% endif %}</td>
-            <td>{% if game.score %}{{game.score|double-format:2}}{% endif %}</td>
-            <td>{% if game.user-score %}{{game.user-score|double-format:2}}{% endif %}</td>
+            <td class="nowrap">{% if game.igdb.total_rating %}{{game.igdb.total_rating|double-format:2}}{% endif %}</td>
+            <td class="nowrap">{% if game.igdb.rating %}{{game.igdb.rating|double-format:2}}{% endif %}</td>
+            <td class="nowrap">{% if game.score %}{{game.score|double-format:2}}{% endif %}</td>
+            <td class="nowrap">{% if game.user-score %}{{game.user-score|double-format:2}}{% endif %}</td>
+            <td class="nowrap">{% if game.release-date %}{{game.release-date|date:yyyy-MM-dd}}{% endif %}</td>
+            <td class="nowrap">{% if game.added-date %}{{game.added-date|date:yyyy-MM-dd}}{% endif %}</td>
         </tr>
         {% endfor %}
     </tbody>

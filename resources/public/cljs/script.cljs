@@ -1,4 +1,6 @@
-(ns script)
+(ns script
+  (:require
+   [clojure.string :as str]))
 
 (defn get-checked
   [checkbox-name]
@@ -33,7 +35,15 @@
 
 (defn parse-float
   [str]
-  (if (= "" str) 0 (js/parseFloat str)))
+  (cond
+    ;; No score, return 0
+    (= "" str) 0
+    ;; We're sorting on a date column, so conten has a -
+    (str/includes? str "-") (-> str
+                                (str/replace #"-" "")
+                                (js/parseInt))
+    ;; Sort on score, so convert score to float
+    :else (js/parseFloat str)))
 
 (defn sort-table-by-column
   [table-id column-idx ascending]

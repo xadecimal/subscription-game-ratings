@@ -6,7 +6,8 @@
    [com.xadecimal.subscription-game-ratings.model :as m]
    [com.xadecimal.subscription-game-ratings.utils :as u]
    [hickory.core :as h]
-   [hickory.select :as hs])
+   [hickory.select :as hs]
+   [clojure.zip :as z])
   (:import
    [java.time LocalDate ZoneId]
    [java.time.format DateTimeFormatter]
@@ -41,7 +42,8 @@
                     (hs/not (hs/class "h-ellip"))
                     (hs/not (hs/class "prevnext"))))
                   (map #(-> % :content first :attrs :href))
-                  (map #(str game-pass-domain %)))]
+                  (map #(str game-pass-domain %))
+                  #_(take 1))]
     (into [first-page] (mapv #(-> % u/slurp-memo h/parse h/as-hickory) urls))))
 
 (def pc-game-pass-hickory-pages (get-all-hickory-pages pc-game-pass-url))
@@ -55,6 +57,19 @@
   (try
     (some-> date
             (LocalDate/parse (DateTimeFormatter/ofPattern "dd MMMM yyyy" Locale/US))
+            (.atStartOfDay (ZoneId/of "UTC"))
+            (.toInstant)
+            (Date/from))
+    (catch Exception ex
+      (println
+       (str "Could not parse " date " due to: " (stacktrace/root-cause ex)))
+      nil)))
+
+(defn parse-true-added-date
+  [date]
+  (try
+    (some-> date
+            (LocalDate/parse (DateTimeFormatter/ofPattern "dd MMM yy" Locale/US))
             (.atStartOfDay (ZoneId/of "UTC"))
             (.toInstant)
             (Date/from))
@@ -161,7 +176,9 @@
 
 (defn make-xbox-game-map
   [{[title] :content
-    {:keys [href]} :attrs} subscription]
+    {:keys [href]} :attrs}
+   subscription
+   added-str]
   (let [href (str game-pass-domain href)
         true-game-details (scrape-true-game href)
         platforms (->> true-game-details
@@ -173,6 +190,7 @@
                                  "xbox 360"})
                        (map true-platform->platform-kw))
         release-date (:release-date true-game-details)
+        added-date (parse-true-added-date added-str)
         igdb (igdb/find-igdb-game title release-date platforms)]
     (when (contains? (:subscriptions true-game-details) subscription)
       (m/make-game-map
@@ -186,6 +204,7 @@
                         :else
                         subscription)
         :release-date release-date
+        :added-date added-date
         :user-score (:user-score true-game-details)
         :img (-> igdb (get "cover") (get "img"))
         :url (:url true-game-details)
@@ -193,21 +212,20 @@
 
 (defn scrape-xbox-catalog
   [subscription hickory]
-  (->> hickory
-       (hs/select
-        (hs/descendant
-         (hs/id "oGameList")
-         (hs/tag "tbody")
-         (hs/and (hs/tag "tr")
-                 (hs/or (hs/class "even")
-                        (hs/class "odd")))
-         (hs/and (hs/tag "td")
-                 (hs/class "game"))))
-       (map :content)
-       (map first)
-       #_(take 31)
-       (map #(make-xbox-game-map % subscription))
-       (remove nil?)))
+  (let [rows (->> hickory
+                  (hs/select-locs
+                   (hs/descendant
+                    (hs/id "oGameList")
+                    (hs/tag "tbody")
+                    (hs/and (hs/tag "tr")
+                            (hs/or (hs/class "even")
+                                   (hs/class "odd"))))))]
+    (->> rows
+         (map #(do [(->> % (z/down) (z/right) (z/right) (z/right) (z/down) (z/node))
+                    (->> % (z/down) (z/rightmost) (z/down) (z/node))]))
+         #_(take 1)
+         (map (fn [[game added]] (make-xbox-game-map game subscription added)))
+         (remove nil?))))
 
 (defmethod m/scrape-catalog :pc-gp
   [_]
