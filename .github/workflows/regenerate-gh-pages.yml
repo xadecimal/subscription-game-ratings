@@ -60,7 +60,7 @@ jobs:
           path: /tmp/clojure-*.edn
           retention-days: 6
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v3
         with:
           path: ./resources/public
 
