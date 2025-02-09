@@ -7,7 +7,7 @@
 
 (defn normalize
   [str]
-  (-> str
+  (some-> str
       (str/lower-case)
       (str/replace #"\s+" " ") ; make whitespace uniform
       (str/replace #"\(.*\)" "") ; remove things between parenthesis
@@ -76,8 +76,10 @@
 
 (defn exact-match
   [str1 str2]
-  (= (normalize str1)
-     (normalize str2)))
+  (and str1
+       str2
+       (= (normalize str1)
+          (normalize str2))))
 
 ;;;; Fuzzy Matching
 ;;;;;;;;;;;;;;;;;;;;;;;
